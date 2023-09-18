@@ -1,0 +1,6 @@
+name: STT
+dependencies:
+  - glob
+  - pip
+  - pip:
+      - azure-cognitiveservices-speech
