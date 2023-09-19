@@ -1,7 +1,22 @@
 import azure.cognitiveservices.speech as speechsdk
 import glob
 
-def get_transcript(wav_path,speech_key, service_region):
+
+from typing import Optional
+
+def get_transcript(wav_path: str, speech_key: str, service_region: str, out_dir: Optional[str] = None) -> str:
+    """
+    Transcribes speech from an audio file using Azure Cognitive Services Speech-to-Text API.
+
+    Args:
+        wav_path (str): The path to the WAV file to transcribe.
+        speech_key (str): The subscription key for the Speech-to-Text API.
+        service_region (str): The service region for the Speech-to-Text API.
+        out_dir (Optional[str]): The directory to save the transcribed text file. Defaults to None.
+
+    Returns:
+        str: The transcribed text from the audio file.
+    """
     # Creates an instance of a speech config with specified subscription key and service region.
     # Replace with your own subscription key and service region (e.g., "westus").
 
@@ -37,10 +52,12 @@ def get_transcript(wav_path,speech_key, service_region):
     speech_recognizer.stop_continuous_recognition()
 
     #save to file
-    with open(wav_path.replace('.wav', '.txt'), 'w') as f:
-        f.write(' '.join(all_results))
+    if out_dir is not None:
+        with open(os.path.join(out_dir, os.path.basename(wav_path).replace('.wav', '.txt')), 'w') as f:
+            f.write(' '.join(all_results))
 
     return ' '.join(all_results)
+
 if __name__ == '__main__':
     import os
     #read from environment variables
