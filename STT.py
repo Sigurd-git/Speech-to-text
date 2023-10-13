@@ -1,10 +1,10 @@
 import azure.cognitiveservices.speech as speechsdk
 import glob
-
+import openai
 
 from typing import Optional
 
-def get_transcript(wav_path: str, speech_key: str, service_region: str, out_dir: Optional[str] = None) -> str:
+def get_transcript_azure(wav_path: str, speech_key: str, service_region: str, out_dir: Optional[str] = None) -> str:
     """
     Transcribes speech from an audio file using Azure Cognitive Services Speech-to-Text API.
 
@@ -58,11 +58,38 @@ def get_transcript(wav_path: str, speech_key: str, service_region: str, out_dir:
 
     return ' '.join(all_results)
 
+def get_transcript_openai(wav_path: str, api_key: str, out_dir: Optional[str] = None) -> str:
+    """
+    Transcribes speech from an audio file using OpenAI Speech-to-Text API.
+
+    Args:
+        wav_path (str): The path to the WAV file to transcribe.
+        api_key (str): The API key for the Speech-to-Text API.
+        out_dir (Optional[str]): The directory to save the transcribed text file. Defaults to None.
+
+    Returns:
+        str: The transcribed text from the audio file.
+    """
+
+    openai.api_key = api_key
+    with open(wav_path, "rb") as audio_file:
+        transcript = openai.Audio.transcribe("whisper-1", audio_file)['text']
+    #save to file
+    if out_dir is not None:
+        with open(os.path.join(out_dir, os.path.basename(wav_path).replace('.wav', '.txt')), 'w') as f:
+            f.write(transcript)
+    return transcript
 if __name__ == '__main__':
     import os
+    wav = 'test.wav'
+    
+    
+    #read from environment variables
+    openai_key = os.environ['OPENAI_API_KEY']
+    transcript = get_transcript_openai(wav, openai_key)
+    
     #read from environment variables
     speech_key, service_region = os.environ['AZURE_SPEECH_KEY'], os.environ['AZURE_SERVICE_REGION']
-    wav = 'your_wav_file.wav'
-    get_transcript(wav, speech_key, service_region)
+    transcript = get_transcript_azure(wav, speech_key, service_region)
 
 
