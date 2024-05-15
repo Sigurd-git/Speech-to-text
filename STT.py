@@ -87,11 +87,12 @@ def get_transcript_openai(
     Returns:
         str: The transcribed text from the audio file.
     """
-    import openai
+    from openai import OpenAI
 
-    openai.api_key = api_key
+    client = OpenAI(api_key=api_key)
+
     with open(wav_path, "rb") as audio_file:
-        transcript = openai.Audio.transcribe("whisper-1", audio_file)["text"]
+        transcript = client.audio.transcribe("whisper-1", audio_file)["text"]
     # save to file
     if out_dir is not None:
         with open(
