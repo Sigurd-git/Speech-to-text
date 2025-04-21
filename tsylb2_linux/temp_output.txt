@@ -1,0 +1,20 @@
+
+ Program TSYLB2 export version 1.1.
+ Tests Syllabification.
+
+ Input parameter values are:
+   native/native+foreign switch  = -n
+   pcodeset file  name = 'phon1ax.pcd'
+   db_level = 0
+ Name of pcodeset is: 'phon1ax.pcd'
+
+ Enter ASCII phone string:  Basic pron is /# [ m '1 iy ] #/
+
+
+ No. of prons = 1
+ They are:
+ #  Pronunciation ................         Rate  Lects
+ 1 /# [ m '1 iy ] #                     /  >0      0
+
+ Enter ASCII phone string: 
+ Quitting now.  Bye.

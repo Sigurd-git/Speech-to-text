@@ -74,7 +74,10 @@ def get_transcript_azure(
 
 
 def get_transcript_openai(
-    wav_path: str, api_key: str, out_dir: Optional[str] = None
+    wav_path: str,
+    api_key: str,
+    out_dir: Optional[str] = None,
+    language: str = "en",
 ) -> str:
     """
     Transcribes speech from an audio file using OpenAI Speech-to-Text API.
@@ -92,7 +95,12 @@ def get_transcript_openai(
     client = OpenAI(api_key=api_key)
 
     with open(wav_path, "rb") as audio_file:
-        transcript = client.audio.transcribe("whisper-1", audio_file)["text"]
+        transcript = client.audio.transcriptions.create(
+            model="gpt-4o-transcribe",
+            file=audio_file,
+            language=language,
+            response_format="text",
+        )
     # save to file
     if out_dir is not None:
         with open(
